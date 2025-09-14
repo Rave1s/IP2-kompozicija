@@ -63,11 +63,37 @@ namespace RadixTreeProject {
                         return;
                     }
                 }
+                
                 node->isLeaf = true;
             }
 
             bool search(const ValueType& word) {
+                const RadixNode* node = root.get();
+                size_t index = 0;
 
+                while (index < word.size()) {
+                    char c = word[index];
+
+                    if (node->children.count(c) == 0)
+                    {
+                        return false;
+                    }
+
+                    const RadixNode* child = node->children.at(c).get();
+                    size_t matchingLength = 0;
+
+                    while (matchingLength < child->word.size() && index + matchingLength < word.size() && word[index + matchingLength] == child->word[matchingLength]) {
+                        ++matchingLength;
+                    }
+                    if (matchingLength != child->word.size()) {
+                        return false;
+                    }
+
+                    node = child;
+                    index += matchingLength;
+                }
+
+                return node->isLeaf;
             }
 
             void remove(const ValueType& word) {
