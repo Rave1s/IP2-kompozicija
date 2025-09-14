@@ -21,6 +21,12 @@ namespace RadixTreeProject {
 
             }
 
+            ~RadixImpl() {
+                freeMemory();
+            }
+
+            
+
             static std::unique_ptr<RadixNode> copyRadixTree(const RadixNode* node) {
                 if (!node) {
                     return nullptr;
@@ -31,6 +37,10 @@ namespace RadixTreeProject {
                     copy->children[ptr.first] = copyRadixTree(ptr.second.get());
                 }
                 return copy;
+            }
+
+            void freeMemory() {
+                root.reset();
             }
     };
 
