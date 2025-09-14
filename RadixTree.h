@@ -17,13 +17,11 @@ namespace RadixTreeProject {
 
             RadixTree();
 
+            ~RadixTree();
+
             RadixTree(const RadixTree& other);
 
             RadixTree& operator=(const RadixTree& other);
-
-            RadixTree(RadixTree&& other) noexcept;
-
-            RadixTree& operator=(RadixTree&& other) noexcept;
 
             void insert(const ValueType& word);
 
