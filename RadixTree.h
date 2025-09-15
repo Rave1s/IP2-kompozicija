@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <exception>
 
 //TODO add explanatory comments
 namespace RadixTreeProject {
@@ -45,7 +46,19 @@ namespace RadixTreeProject {
 
     };
 
-    //TODO exception class
+    class MyException : public std::exception {
+        private:
+            std::string message;
+
+        public:
+            explicit MyException(const std::string msg) : message(msg) {
+
+            }
+
+            const char* what() const noexcept override {
+                return message.c_str();
+            }
+    };
 }
 
 #endif
