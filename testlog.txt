@@ -1,0 +1,36 @@
+Initial tree:
+
+
+
+Inserting words: toast, toaster, toasting
+
+Words inserted correctly. Both search methods work.
+
+Words after insertion:
+
+toast, toasting, toaster, 
+
+Cloning operator test passed.
+
+Logical operator test passed.
+
+Tree merging successful.
+
+Words after merging:
+
+car, cat, toast, toasting, toaster, 
+
+Tree unmerging and word removal test passed.
+
+Words after removal:
+
+toast, toaster, 
+
+Tree clearing test passed.
+
+Tree after clearing:
+
+
+
+All tests passed successfully!
+
