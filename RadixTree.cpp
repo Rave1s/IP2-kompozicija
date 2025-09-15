@@ -10,8 +10,8 @@ namespace RadixTreeProject {
             struct RadixNode {
                 ValueType word;
                 std::unordered_map<char, std::unique_ptr<RadixNode>> children;
-                bool isLeaf;
-                RadixNode(const ValueType& wrd = "") : word(word), isLeaf(false) {
+                bool isEndOfWord;
+                RadixNode(const ValueType& wrd = "") : word(word), isEndOfWord(false) {
 
                 };
             };
@@ -34,7 +34,7 @@ namespace RadixTreeProject {
                     char c = word[index];
                     if (node->children.count(c) == 0) {
                         node->children[c] = std::make_unique<RadixNode>(word.substr(index));
-                        node->children[c]->isLeaf = true;
+                        node->children[c]->isEndOfWord = true;
                         return;
                     }
 
@@ -51,21 +51,21 @@ namespace RadixTreeProject {
                         auto nodeSplit = std::make_unique<RadixNode>(child->word.substr(0, matchingLength));
                         nodeSplit->children[child->word[matchingLength]] = std::move(node->children[c]);
                         nodeSplit->children[child->word[matchingLength]]->word = child->word.substr(matchingLength);
-                        nodeSplit->isLeaf = false;
+                        nodeSplit->isEndOfWord = false;
                         node->children[c] = std::move(nodeSplit);
 
                         if (index + matchingLength < word.size()) {
                             node->children[c]->children[word[index + matchingLength]] = std::make_unique<RadixNode>(word.substr(index + matchingLength));
-                            node->children[c]->children[word[index + matchingLength]]->isLeaf = true;
+                            node->children[c]->children[word[index + matchingLength]]->isEndOfWord = true;
                         }
                         else {
-                            node->children[c]->isLeaf = true;
+                            node->children[c]->isEndOfWord = true;
                         }
                         return;
                     }
                 }
 
-                node->isLeaf = true;
+                node->isEndOfWord = true;
             }
 
             bool search(const ValueType& word) {
@@ -94,7 +94,7 @@ namespace RadixTreeProject {
                     index += matchingLength;
                 }
 
-                return node->isLeaf;
+                return node->isEndOfWord;
             }
 
             void remove(const ValueType& word) {
@@ -124,18 +124,18 @@ namespace RadixTreeProject {
                     index += matchingLength;
                 }
 
-                if (!node || !node->isLeaf || index != word.size()) {
+                if (!node || !node->isEndOfWord || index != word.size()) {
                     throw MyException("Word not found. Couldn't remove");
                 }
 
-                node->isLeaf = false;
+                node->isEndOfWord = false;
 
                 for (int i = removablePart.size() - 1; i >= 0; --i) {
                     RadixNode* parent = removablePart[i].first;
                     char c = removablePart[i].second;
                     RadixNode* child = parent->children[c].get();
 
-                    if (!child->isLeaf && child->children.empty()) {
+                    if (!child->isEndOfWord && child->children.empty()) {
                         parent->children.erase(c);
                     }
                     else {
@@ -151,7 +151,7 @@ namespace RadixTreeProject {
                 }
 
                 prefix += currentNode->word;
-                if (currentNode->isLeaf) {
+                if (currentNode->isEndOfWord) {
                     allWords.push_back(prefix);
                 }
 
@@ -174,44 +174,30 @@ namespace RadixTreeProject {
                 return os.str();
             }
 
-            bool operator==(const RadixTree& other) const{
+            bool compareTrees(const RadixNode* thisNode, const RadixNode* otherNode) const {
+                if (!thisNode && !otherNode) {
+                    return true;
+                }
+                if (!thisNode || !otherNode) {
+                    return false;
+                }
 
-            }
+                if (thisNode->word != otherNode->word || thisNode->isEndOfWord != otherNode->isEndOfWord || thisNode->children.size() != otherNode->children.size()) {
+                    return false;
+                }
 
-            bool operator!=(const RadixTree& other) const{
+                for (const auto& [thisNodesChar, thisNodesChild] : thisNode->children) {
+                    auto matchingChild = otherNode->children.find(thisNodesChar);
+                    if (matchingChild == otherNode->children.end()) {
+                        return false;
+                    }
 
-            }
+                    if (!compareTrees(thisNodesChild.get(), matchingChild->second.get())) {
+                        return false;
+                    }
+                }
 
-            bool operator<(const RadixTree& other) const {
-
-            }
-
-            bool operator>(const RadixTree& other) const {
-
-            }
-
-            bool operator<=(const RadixTree& other) const {
-
-            }
-
-            bool operator>=(const RadixTree& other) const {
-
-            }
-
-            RadixTree& operator+=(const ValueType& word) {
-
-            }
-
-            RadixTree& operator-=(const ValueType& word) {
-
-            }
-
-            void operator!() {
-
-            }
-
-            bool operator[](const ValueType& word) const {
-                
+                return true;
             }
 
             static std::unique_ptr<RadixNode> copyRadixTree(const RadixNode* node) {
@@ -219,7 +205,7 @@ namespace RadixTreeProject {
                     return nullptr;
                 }
                 auto copy = std::make_unique<RadixNode>(node->word);
-                copy->isLeaf = node->isLeaf;
+                copy->isEndOfWord = node->isEndOfWord;
                 for (const auto& ptr : node->children) {
                     copy->children[ptr.first] = copyRadixTree(ptr.second.get());
                 }
@@ -247,5 +233,46 @@ namespace RadixTreeProject {
             pImpl->root = RadixImpl::copyRadixTree(other.pImpl->root.get());
         }
         return *this;
+    }
+
+    
+    bool RadixTree::operator==(const RadixTree& other) const{
+                return pImpl->compareTrees(pImpl->root.get(), other.pImpl->root.get());
+    }
+
+    bool RadixTree::operator!=(const RadixTree& other) const{
+
+    }
+
+    bool RadixTree::operator<(const RadixTree& other) const {
+
+    }
+
+    bool RadixTree::operator>(const RadixTree& other) const {
+
+    }
+
+    bool RadixTree::operator<=(const RadixTree& other) const {
+
+    }
+
+    bool RadixTree::operator>=(const RadixTree& other) const {
+
+    }
+
+    RadixTree& RadixTree::operator+=(const ValueType& word) {
+
+    }
+
+    RadixTree& RadixTree::operator-=(const ValueType& word) {
+
+    }
+
+    void RadixTree::operator!() {
+
+    }
+
+    bool RadixTree::operator[](const ValueType& word) const {
+
     }
 }
