@@ -60,7 +60,7 @@ namespace RadixTreeProject {
              * @param word The word to search in the tree.
              * @return True if the word exists in the tree, false otherwise.
              */
-            bool search(const ValueType& word);
+            bool search(const ValueType& word) const;
 
             /**
              * @brief Removes a given word from the tree.
