@@ -154,7 +154,7 @@ namespace RadixTreeProject {
             std::string message;
 
         public:
-            explicit MyException(const std::string msg) : message(msg) {
+            explicit MyException(const std::string& msg) : message(msg) {
 
             }
 
