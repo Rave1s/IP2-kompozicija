@@ -225,7 +225,7 @@ namespace RadixTreeProject {
                 std::ostringstream os;
 
                 for (const ValueType& currentWord : allSavedWords) {
-                    os << currentWord << " ";
+                    os << currentWord << ", ";
 
                 }
 
