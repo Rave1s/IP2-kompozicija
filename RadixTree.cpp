@@ -174,6 +174,46 @@ namespace RadixTreeProject {
                 return os.str();
             }
 
+            bool operator==(const RadixTree& other) const{
+
+            }
+
+            bool operator!=(const RadixTree& other) const{
+
+            }
+
+            bool operator<(const RadixTree& other) const {
+
+            }
+
+            bool operator>(const RadixTree& other) const {
+
+            }
+
+            bool operator<=(const RadixTree& other) const {
+
+            }
+
+            bool operator>=(const RadixTree& other) const {
+
+            }
+
+            RadixTree& operator+=(const ValueType& word) {
+
+            }
+
+            RadixTree& operator-=(const ValueType& word) {
+
+            }
+
+            void operator!() {
+
+            }
+
+            bool operator[](const ValueType& word) const {
+                
+            }
+
             static std::unique_ptr<RadixNode> copyRadixTree(const RadixNode* node) {
                 if (!node) {
                     return nullptr;
