@@ -299,6 +299,6 @@ namespace RadixTreeProject {
     }
 
     bool RadixTree::operator[](const ValueType& word) const {
-
+        return pImpl->search(word);
     }
 }
