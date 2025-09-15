@@ -39,7 +39,7 @@ namespace RadixTreeProject {
 
                     RadixNode* child = node->children[c].get();
                     size_t matchingLength = 0;
-                    while(matchingLength < child->word.size() && index + matchingLength < word.size() && word[index + matchingLength] == child->word[matchingLength]) {
+                    while (matchingLength < child->word.size() && index + matchingLength < word.size() && word[index + matchingLength] == child->word[matchingLength]) {
                         ++matchingLength;
                     }
                     if (matchingLength == child->word.size()) {
@@ -63,7 +63,7 @@ namespace RadixTreeProject {
                         return;
                     }
                 }
-                
+
                 node->isLeaf = true;
             }
 
@@ -97,7 +97,50 @@ namespace RadixTreeProject {
             }
 
             void remove(const ValueType& word) {
+                RadixNode* node = root.get();
+                std::vector<std::pair<RadixNode*, char>> removablePart;
+                size_t index = 0;
 
+                while (node && index < word.size()) {
+                    char c = word[index];
+                    auto existingChild = node->children.find(c);
+                    if (existingChild == node->children.end()) {
+                        throw MyException("Word not found. Couldn't remove");
+                    }
+
+                    RadixNode* child = existingChild->second.get();
+                    size_t matchingLength = 0;
+
+                    while (matchingLength < child->word.size() && index + matchingLength < word.size() && word[index + matchingLength] == child->word[matchingLength]) {
+                        ++matchingLength;
+                    }
+                    if (matchingLength != child->word.size()) {
+                        throw MyException("Word not found. Couldn't remove");
+                    }
+
+                    removablePart.emplace_back(node, c);
+                    node = child;
+                    index += matchingLength;
+                }
+
+                if (!node || !node->isLeaf || index != word.size()) {
+                    throw MyException("Word not found. Couldn't remove");
+                }
+
+                node->isLeaf = false;
+
+                for (int i = removablePart.size() - 1; i >= 0; --i) {
+                    RadixNode* parent = removablePart[i].first;
+                    char c = removablePart[i].second;
+                    RadixNode* child = parent->children[c].get();
+
+                    if (!child->isLeaf && child->children.empty()) {
+                        parent->children.erase(c);
+                    }
+                    else {
+                        break;
+                    }
+                }
             }
 
             static std::unique_ptr<RadixNode> copyRadixTree(const RadixNode* node) {
@@ -106,7 +149,7 @@ namespace RadixTreeProject {
                 }
                 auto copy = std::make_unique<RadixNode>(node->word);
                 copy->isLeaf = node->isLeaf;
-                for(const auto& ptr : node->children) {
+                for (const auto& ptr : node->children) {
                     copy->children[ptr.first] = copyRadixTree(ptr.second.get());
                 }
                 return copy;
