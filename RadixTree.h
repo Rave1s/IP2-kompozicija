@@ -39,8 +39,8 @@ namespace RadixTreeProject {
             bool operator<=(const RadixTree& other) const;
             bool operator>=(const RadixTree& other) const;
 
-            RadixTree& operator+=(const ValueType& word);
-            RadixTree& operator-=(const ValueType& word);
+            RadixTree& operator+=(const RadixTree& other);
+            RadixTree& operator-=(const RadixTree& other);
             void operator!();
             bool operator[](const ValueType& word) const;
 
