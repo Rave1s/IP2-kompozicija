@@ -55,7 +55,7 @@ int main() {
         std::cerr << "My exception caught: " << ex.what() << std::endl;
     }
     catch (...) {
-        std::cerr << "Unexpected exception! caught." << std::endl;
+        std::cerr << "Unexpected exception caught." << std::endl;
     }
 
     std::cout << "Program completed successfully." << std::endl;
