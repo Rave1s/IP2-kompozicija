@@ -255,15 +255,15 @@ namespace RadixTreeProject {
     }
 
     bool RadixTree::operator>(const RadixTree& other) const {
-
+        return !(*this < other);
     }
 
     bool RadixTree::operator<=(const RadixTree& other) const {
-
+        return ((*this < other) || (*this == other));
     }
 
     bool RadixTree::operator>=(const RadixTree& other) const {
-
+        return !(*this <= other);
     }
 
     RadixTree& RadixTree::operator+=(const ValueType& word) {
