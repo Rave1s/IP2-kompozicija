@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <sstream>
 
 namespace RadixTreeProject {
     class RadixTree::RadixImpl{
@@ -141,6 +142,36 @@ namespace RadixTreeProject {
                         break;
                     }
                 }
+            }
+
+            //TODO add the toString method and the operators
+            void collectAllWords(const RadixNode* currentNode, ValueType prefix, std::vector<ValueType>& allWords) const {
+                if (!currentNode) {
+                    return;
+                }
+
+                prefix += currentNode->word;
+                if (currentNode->isLeaf) {
+                    allWords.push_back(prefix);
+                }
+
+                for (const auto& [character, child] : currentNode->children) {
+                    collectAllWords(child.get(), prefix, allWords);
+                }
+            }
+
+
+            std::string toString() const {
+                std::vector<ValueType> allSavedWords;
+                collectAllWords(root.get(), "", allSavedWords);
+                std::ostringstream os;
+
+                for (const ValueType& currentWord : allSavedWords) {
+                    os << currentWord << " ";
+
+                }
+
+                return os.str();
             }
 
             static std::unique_ptr<RadixNode> copyRadixTree(const RadixNode* node) {
