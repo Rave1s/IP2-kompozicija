@@ -64,8 +64,13 @@ namespace RadixTreeProject {
                         return;
                     }
                 }
-
-                node->isEndOfWord = true;
+                
+                if (node->isEndOfWord == true) {
+                    throw MyException("The word already exists in the tree");
+                }
+                else {
+                    node->isEndOfWord = true;
+                }
             }
 
             bool search(const ValueType& word) {
