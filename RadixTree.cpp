@@ -245,7 +245,13 @@ namespace RadixTreeProject {
     }
 
     bool RadixTree::operator<(const RadixTree& other) const {
-        
+        std::vector<ValueType> wordsInThisTree;
+        std::vector<ValueType> wordsInOtherTree;
+
+        pImpl->collectAllWords(pImpl->root.get(), "", wordsInThisTree);
+        other.pImpl->collectAllWords(other.pImpl->root.get(), "", wordsInOtherTree);
+
+        return wordsInThisTree.size() < wordsInOtherTree.size();
     }
 
     bool RadixTree::operator>(const RadixTree& other) const {
