@@ -235,17 +235,17 @@ namespace RadixTreeProject {
         return *this;
     }
 
-    
+
     bool RadixTree::operator==(const RadixTree& other) const{
-                return pImpl->compareTrees(pImpl->root.get(), other.pImpl->root.get());
+        return pImpl->compareTrees(pImpl->root.get(), other.pImpl->root.get());
     }
 
     bool RadixTree::operator!=(const RadixTree& other) const{
-
+        return !(*this == other);
     }
 
     bool RadixTree::operator<(const RadixTree& other) const {
-
+        
     }
 
     bool RadixTree::operator>(const RadixTree& other) const {
