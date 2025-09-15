@@ -23,7 +23,7 @@ namespace RadixTreeProject {
             }
 
             ~RadixImpl() {
-                freeMemory();
+                deleteTree();
             }
 
             void insert(const ValueType& word) {
@@ -212,7 +212,11 @@ namespace RadixTreeProject {
                 return copy;
             }
 
-            void freeMemory() {
+            void emptyTree() {
+                root = std::make_unique<RadixNode>();
+            }
+
+            void deleteTree() {
                 root.reset();
             }
     };
@@ -266,16 +270,32 @@ namespace RadixTreeProject {
         return !(*this <= other);
     }
 
-    RadixTree& RadixTree::operator+=(const ValueType& word) {
+    RadixTree& RadixTree::operator+=(const RadixTree& other) {
+        std::vector<ValueType> wordsInOtherTree;
+        other.pImpl->collectAllWords(other.pImpl->root.get(), "", wordsInOtherTree);
 
+        for (const auto& word : wordsInOtherTree) {
+            this->insert(word);
+        }
+
+        return *this;
     }
 
-    RadixTree& RadixTree::operator-=(const ValueType& word) {
+    RadixTree& RadixTree::operator-=(const RadixTree& other) {
+        std::vector<ValueType> wordsInOtherTree;
+        other.pImpl->collectAllWords(other.pImpl->root.get(), "", wordsInOtherTree);
 
+        for (const auto& word : wordsInOtherTree) {
+            this->remove(word);
+        }
+
+        return *this;
     }
 
-    void RadixTree::operator!() {
-
+    RadixTree& RadixTree::operator!() {
+        pImpl->emptyTree();
+        
+        return *this;
     }
 
     bool RadixTree::operator[](const ValueType& word) const {

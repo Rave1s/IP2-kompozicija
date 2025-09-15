@@ -41,7 +41,7 @@ namespace RadixTreeProject {
 
             RadixTree& operator+=(const RadixTree& other);
             RadixTree& operator-=(const RadixTree& other);
-            void operator!();
+            RadixTree& operator!();
             bool operator[](const ValueType& word) const;
 
     };
