@@ -322,7 +322,7 @@ namespace RadixTreeProject {
         pImpl->collectAllWords(pImpl->root.get(), "", wordsInThisTree);
         other.pImpl->collectAllWords(other.pImpl->root.get(), "", wordsInOtherTree);
 
-        return wordsInThisTree.size() < wordsInOtherTree.size();
+        return wordsInThisTree.size() > wordsInOtherTree.size();
     }
 
     bool RadixTree::operator>(const RadixTree& other) const {
